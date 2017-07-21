@@ -29,8 +29,34 @@ def fetch_mail(uuid):
 
     return message
 
-def parse_mail(email):
-    pass
+def parse_mail(email, uuid):
+    url = "https://api.edison.tech/v1/discovery"
+
+    api_key = open('.keys/EDISON', 'r').readline().rstrip()
+    api_secret = open('.keys/EDISON_SECRET', 'r').readline().rstrip()
+
+    eml = fetch_mail(uuid)
+
+    data = {
+        'email': eml,
+        'api_key': api_key,
+        'timestamp': int(time.time())
+    }
+
+    base_string = 'POST&/v1/discovery'
+
+    for k in sorted(data):
+        base_string += '&' + k + '=' + str(data[k])
+
+    data['signature'] = hmac.new(
+        api_secret.encode('utf-8'),
+        base_string.encode('utf-8'),
+        hashlib.sha1
+    ).hexdigest().decode('utf-8')
+
+    response = requests.post(url, data=data)
+    return json.dumps(response.json(), indent=2)
+
 
 def main():
     print(fetch_mail(1))
