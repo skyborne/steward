@@ -32,7 +32,7 @@ def fetch_mail(uuid):
 
     message = email.message_from_string(raw_email_string)
 
-    return message
+    return {message['subject']: raw_email_string}
 
 def parse_mail(email, uuid):
     url = "https://api.edison.tech/v1/discovery"
@@ -40,10 +40,10 @@ def parse_mail(email, uuid):
     api_key = open('.keys/EDISON', 'r').readline().rstrip()
     api_secret = open('.keys/EDISON_SECRET', 'r').readline().rstrip()
 
-    eml = fetch_mail(uuid)
+    email = fetch_mail(uuid)
 
     data = {
-        'email': eml,
+        'email': email,
         'api_key': api_key,
         'timestamp': int(time.time())
     }
