@@ -4,6 +4,11 @@ from uuid import uuid4
 
 import imaplib
 import email
+import json
+import hashlib
+import hmac
+import time
+import requests
 
 def generate_key():
     return uuid4()
