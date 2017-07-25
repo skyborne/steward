@@ -14,25 +14,30 @@ def generate_key():
     return uuid4()
 
 def fetch_mail(uuid):
-    mail = imaplib.IMAP4_SSL("imap.gmail.com")
-    mail.login("skyborne.info@gmail.com", open('.keys/GMAIL', 'r').readline().rstrip())
-    mail.list()
-    mail.select("inbox")
+    email_id = 'skyborne.reservations@gmail.com'
+    access_token = 'access_key'
+    auth_string = 'user=%s\1auth=Bearer %s\1\1' % (email_id, access_token)
 
-    result, data = mail.search(None, "ALL")
+    mail = imaplib.IMAP4_SSL('imap.gmail.com')
+    mail.debug = 4
+    mail.authenticate('XOAUTH2', lambda x: auth_string)
+    mail.select('INBOX')
 
     ids = data[0]
     id_list = ids.split()
-    latest_email_id = id_list[-1]
 
-    result, data = mail.fetch(latest_email_id, "(RFC822)")
+    for identity in id_list:
+        result, data = mail.fetch(identity, "(RFC822)")
 
-    raw_email = data[0][1]
-    raw_email_string = raw_email.decode("utf-8")
+        raw_email = data[0][1]
+        raw_email_string = raw_email.decode("utf-8")
 
-    message = email.message_from_string(raw_email_string)
+        message = email.message_from_string(raw_email_string)
 
-    return {message['subject']: raw_email_string}
+        if message['subject'] == uuid:
+            return { 'email': raw_email_string }
+        else:
+            return 'nil'
 
 def parse_mail(email, uuid):
     url = "https://api.edison.tech/v1/discovery"
@@ -40,10 +45,10 @@ def parse_mail(email, uuid):
     api_key = open('.keys/EDISON', 'r').readline().rstrip()
     api_secret = open('.keys/EDISON_SECRET', 'r').readline().rstrip()
 
-    email = fetch_mail(uuid)
+    mail = fetch_mail(uuid)
 
     data = {
-        'email': email,
+        'email': mail,
         'api_key': api_key,
         'timestamp': int(time.time())
     }

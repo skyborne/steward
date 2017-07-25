@@ -100,3 +100,5 @@ ENV/
 
 # keys
 .keys/
+
+oauth2.py
