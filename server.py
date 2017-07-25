@@ -43,7 +43,7 @@ def fetch(subject):
 
         message = email.message_from_string(raw_email_string)
 
-        if message['subject'] == subject:
+        if subject in message['subject']:
             return raw_email_string.rstrip()
 
     return None
