@@ -7,6 +7,8 @@ import hashlib
 import hmac
 import time
 import requests
+import random
+import string
 
 
 def fetch(subject):
@@ -85,4 +87,4 @@ def serve(subject):
     return None
 
 def generate_key():
-    return uuid4()
+    return str(uuid4().hex.upper()[0:6])
