@@ -85,9 +85,3 @@ def serve(uuid):
     if mail:
         return parse(mail)
     return None
-
-def main():
-    pass
-
-if __name__ == "__main__":
-    main()
