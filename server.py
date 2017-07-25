@@ -13,7 +13,7 @@ import requests
 def generate_key():
     return uuid4()
 
-def fetch_mail(uuid):
+def fetch(uuid):
     url = 'https://accounts.google.com/o/oauth2/token'
 
     post_args = {
@@ -46,19 +46,24 @@ def fetch_mail(uuid):
         message = email.message_from_string(raw_email_string)
 
         if message['subject'] == uuid:
-            return raw_email_string
+            return raw_email_string.rstrip()
 
-def parse_mail(email):
+def parse(mail):
     url = "https://api.edison.tech/v1/discovery"
 
-    api_key = open('.keys/EDISON', 'r').readline().rstrip()
+    api_key = open('.keys/EDISON_API', 'r').readline().rstrip()
     api_secret = open('.keys/EDISON_SECRET', 'r').readline().rstrip()
 
     data = {
-        'email': email,
+        'email': mail,
         'api_key': api_key,
         'timestamp': int(time.time())
     }
+
+    base_string = 'POST&/v1/discovery'
+
+    for k in sorted(data):
+        base_string += '&' + k + '=' + str(data[k])
 
     base_string = 'POST&/v1/discovery'
 
@@ -69,19 +74,20 @@ def parse_mail(email):
         api_secret.encode('utf-8'),
         base_string.encode('utf-8'),
         hashlib.sha1
-    ).hexdigest().decode('utf-8')
+    ).hexdigest()
 
     response = requests.post(url, data = data)
     return json.dumps(response.json(), indent = 2)
 
 
+def serve(uuid):
+    mail = fetch(uuid)
+    if mail:
+        return parse(mail)
+    return None
+
 def main():
-    try:
-        mail = fetch_mail('uuid')
-        if mail is not None:
-            parse_mail(mail)
-    except Exception as error:
-        pass
+    pass
 
 if __name__ == "__main__":
     main()
