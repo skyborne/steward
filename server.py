@@ -10,7 +10,10 @@ import hmac
 import time
 import requests
 
-def fetch(uuid):
+
+# searches our gmail inbox for an email with a given subject and returns it
+# otherwise returns an empty string
+def fetch(subject):
     url = 'https://accounts.google.com/o/oauth2/token'
 
     post_args = {
@@ -42,9 +45,12 @@ def fetch(uuid):
 
         message = email.message_from_string(raw_email_string)
 
-        if message['subject'] == uuid:
+        if message['subject'] == subject:
             return raw_email_string.rstrip()
 
+    return ""
+
+# parses given raw email string with Edison's Sift API for flight tickets
 def parse(mail):
     url = "https://api.edison.tech/v1/discovery"
 
@@ -74,14 +80,17 @@ def parse(mail):
     ).hexdigest()
 
     response = requests.post(url, data = data)
+
     return json.dumps(response.json(), indent = 2)
 
-
-def serve(uuid):
-    mail = fetch(uuid)
+# serves the parsed json of an email with the given subject line
+# otherwise returns None
+def serve(subject):
+    mail = fetch(subject)
     if mail:
         return parse(mail)
     return None
 
+# generates a unique identifier
 def generate_key():
     return uuid4()
