@@ -14,14 +14,25 @@ def generate_key():
     return uuid4()
 
 def fetch_mail(uuid):
+    url = 'https://accounts.google.com/o/oauth2/token'
+
+    post_args = {
+        'grant_type': 'refresh_token',
+        'client_id': open('.keys/GMAIL_CLIENT_ID', 'r').readline().rstrip(),
+        'client_secret': open('.keys/GMAIL_CLIENT_SECRET', 'r').readline().rstrip(),
+        'refresh_token': open('.keys/GMAIL_REFRESH_TOKEN', 'r').readline().rstrip()
+    }
+
     email_id = 'skyborne.reservations@gmail.com'
-    access_token = 'access_key'
+    access_token = requests.post(url, data = post_args).json()['access_token']
     auth_string = 'user=%s\1auth=Bearer %s\1\1' % (email_id, access_token)
 
     mail = imaplib.IMAP4_SSL('imap.gmail.com')
     mail.debug = 4
     mail.authenticate('XOAUTH2', lambda x: auth_string)
     mail.select('INBOX')
+
+    result, data = mail.search(None, "ALL")
 
     ids = data[0]
     id_list = ids.split()
@@ -35,9 +46,7 @@ def fetch_mail(uuid):
         message = email.message_from_string(raw_email_string)
 
         if message['subject'] == uuid:
-            return { 'email': raw_email_string }
-        else:
-            return 'nil'
+            return raw_email_string
 
 def parse_mail(email, uuid):
     url = "https://api.edison.tech/v1/discovery"
@@ -69,7 +78,7 @@ def parse_mail(email, uuid):
 
 
 def main():
-    print(fetch_mail(1))
+    print(fetch_mail('caf9306e-94c4-463d-a9b9-d5f47ed1e236'))
 
 if __name__ == "__main__":
     main()
