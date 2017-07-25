@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 from uuid import uuid4
 
 import imaplib
@@ -11,8 +9,6 @@ import time
 import requests
 
 
-# searches our gmail inbox for an email with a given subject and returns it
-# otherwise returns an empty string
 def fetch(subject):
     url = 'https://accounts.google.com/o/oauth2/token'
 
@@ -48,9 +44,8 @@ def fetch(subject):
         if message['subject'] == subject:
             return raw_email_string.rstrip()
 
-    return ""
+    return None
 
-# parses given raw email string with Edison's Sift API for flight tickets
 def parse(mail):
     url = "https://api.edison.tech/v1/discovery"
 
@@ -83,14 +78,11 @@ def parse(mail):
 
     return json.dumps(response.json(), indent = 2)
 
-# serves the parsed json of an email with the given subject line
-# otherwise returns None
 def serve(subject):
     mail = fetch(subject)
     if mail:
         return parse(mail)
     return None
 
-# generates a unique identifier
 def generate_key():
     return uuid4()
