@@ -1,13 +1,14 @@
-from flask import Flask
-from flask import request
+import falcon
+import json
 
-from server import (
-    generate_key,
-)
+import server
 
+api = falcon.API()
 
-app = Flask(__name__)
+class UniqueIdentifierResource:
+    def on_get(self, req, resp):
+        identifier = { 'id': str(server.generate_key()) }
 
-@app.route("/key/")
-def key():
-    return "{}".format(generate_key())
+        resp.body = json.dumps(identifier)
+
+api.add_route('/identifier', UniqueIdentifierResource())

@@ -48,16 +48,14 @@ def fetch_mail(uuid):
         if message['subject'] == uuid:
             return raw_email_string
 
-def parse_mail(email, uuid):
+def parse_mail(email):
     url = "https://api.edison.tech/v1/discovery"
 
     api_key = open('.keys/EDISON', 'r').readline().rstrip()
     api_secret = open('.keys/EDISON_SECRET', 'r').readline().rstrip()
 
-    mail = fetch_mail(uuid)
-
     data = {
-        'email': mail,
+        'email': email,
         'api_key': api_key,
         'timestamp': int(time.time())
     }
@@ -73,12 +71,17 @@ def parse_mail(email, uuid):
         hashlib.sha1
     ).hexdigest().decode('utf-8')
 
-    response = requests.post(url, data=data)
-    return json.dumps(response.json(), indent=2)
+    response = requests.post(url, data = data)
+    return json.dumps(response.json(), indent = 2)
 
 
 def main():
-    print(fetch_mail('caf9306e-94c4-463d-a9b9-d5f47ed1e236'))
+    try:
+        mail = fetch_mail('uuid')
+        if mail is not None:
+            parse_mail(mail)
+    except Exception as error:
+        pass
 
 if __name__ == "__main__":
     main()
