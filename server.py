@@ -87,4 +87,4 @@ def serve(subject):
     return None
 
 def generate_key():
-    return str(uuid4().hex.upper()[0:6])
+    return ''.join(random.choices(string.ascii_uppercase + string.digits, k = 10))
