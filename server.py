@@ -10,9 +10,6 @@ import hmac
 import time
 import requests
 
-def generate_key():
-    return uuid4()
-
 def fetch(uuid):
     url = 'https://accounts.google.com/o/oauth2/token'
 
@@ -85,3 +82,6 @@ def serve(uuid):
     if mail:
         return parse(mail)
     return None
+
+def generate_key():
+    return uuid4()
