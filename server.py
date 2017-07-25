@@ -33,7 +33,7 @@ def fetch(subject):
     result, data = mail.search(None, "ALL")
 
     ids = data[0]
-    id_list = ids.split()
+    id_list = set(ids.split())
 
     for identity in id_list:
         result, data = mail.fetch(identity, "(RFC822)")
