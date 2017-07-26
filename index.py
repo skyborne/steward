@@ -13,5 +13,5 @@ class InformationResultsResource:
     def on_get(self, req, resp):
         resp.body = server.serve(req.params["id"])
 
-api.add_route('/v1/identifier', UniqueIdentifierResource())
+api.add_route('/v1/keygen', UniqueIdentifierResource())
 api.add_route('/v1/results', InformationResultsResource())
