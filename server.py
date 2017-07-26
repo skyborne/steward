@@ -67,9 +67,6 @@ def parse(mail):
 
     base_string = 'POST&/v1/discovery'
 
-    for k in sorted(data):
-        base_string += '&' + k + '=' + str(data[k])
-
     data['signature'] = hmac.new(
         api_secret.encode('utf-8'),
         base_string.encode('utf-8'),
