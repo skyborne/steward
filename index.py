@@ -7,7 +7,7 @@ api = falcon.API()
 
 class UniqueIdentifierResource:
     def on_get(self, req, resp):
-        resp.body = json.dumps({ 'id': str(server.generate_key()) })
+        resp.body = server.generate_key()
 
 class InformationResultsResource:
     def on_get(self, req, resp):
