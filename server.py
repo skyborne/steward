@@ -82,4 +82,4 @@ def serve(subject):
     return None
 
 def generate_key():
-    return json.dumps({ 'id': str(uuid4().hex[:6]) }, sort_keys = True, indent = 2, separators = (',', ': '))
+    return json.dumps({ 'id': str(uuid4().hex[:6]) }, indent = 2)
