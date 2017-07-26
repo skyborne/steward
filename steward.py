@@ -11,7 +11,13 @@ class UniqueIdentifierResource:
 
 class InformationResultsResource:
     def on_get(self, req, resp):
-        resp.body = helper.serve(req.params["id"])
+        response = helper.serve(req.params["id"])
+        if response:
+            if json.loads(response).get('result'):
+                resp.body = response
+
+        if resp.body is None:
+            resp.body = json.dumps({ 'error': 'invalid' }, indent = 2)
 
 api.add_route('/v1/keygen', UniqueIdentifierResource())
 api.add_route('/v1/results', InformationResultsResource())
