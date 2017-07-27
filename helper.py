@@ -30,22 +30,24 @@ def fetch(subject):
     mail.authenticate('XOAUTH2', lambda x: auth_string)
     mail.select('INBOX')
 
-    result, data = mail.search(None, "ALL")
+    result, data = mail.search(None, 'ALL')
 
     ids = data[0]
     id_list = set(ids.split())
 
     for identity in id_list:
-        result, data = mail.fetch(identity, "(RFC822)")
+        result, data = mail.fetch(identity, '(RFC822)')
 
         raw_email = data[0][1]
-        raw_email_string = raw_email.decode("utf-8")
+        raw_email_string = raw_email.decode('utf-8')
 
         message = email.message_from_string(raw_email_string)
 
         if subject in message['subject']:
+            mail.store(identity, '+FLAGS', '\\Deleted')
             return raw_email_string.rstrip()
 
+    mail.expunge()
     return None
 
 def parse(mail):
