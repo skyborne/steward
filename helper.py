@@ -83,7 +83,6 @@ def serve(subject):
     mail = fetch(subject)
     if mail:
         return parse(mail)
-    return None
 
 def generate_key():
     return json.dumps({ 'id': str(uuid4().hex[:6]) }, indent = 2)
