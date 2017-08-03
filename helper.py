@@ -35,6 +35,8 @@ def fetch(subject):
     ids = data[0]
     id_list = set(ids.split())
 
+    ticket = None;
+
     for identity in id_list:
         result, data = mail.fetch(identity, '(RFC822)')
 
@@ -44,11 +46,11 @@ def fetch(subject):
         message = email.message_from_string(raw_email_string)
 
         if subject in message['subject']:
+            ticket = raw_email_string.rstrip()
             mail.store(identity, '+FLAGS', '\\Deleted')
-            return raw_email_string.rstrip()
+            mail.expunge()
 
-    mail.expunge()
-    return None
+    return ticket
 
 def parse(mail):
     url = "https://api.edison.tech/v1/discovery"
