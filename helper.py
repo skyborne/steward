@@ -85,4 +85,4 @@ def serve(subject):
         return parse(mail)
 
 def generate_key():
-    return json.dumps({ 'id': str(uuid4().hex[:6]) }, indent = 2)
+    return json.dumps({ 'id': str(uuid4().hex[6:]).upper() }, indent = 2)
