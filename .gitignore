@@ -1,3 +1,6 @@
+# MacOS Related Files
+.DS_Store
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -100,5 +103,3 @@ ENV/
 
 # keys
 .keys/
-
-oauth2.py
