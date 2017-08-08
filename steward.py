@@ -17,6 +17,7 @@ class InformationResultsResource:
                 resp.body = response
 
         if resp.body is None:
+            resp.status = falcon.HTTP_BAD_REQUEST
             resp.body = json.dumps({ 'error': 'invalid' }, indent = 2)
 
 api.add_route('/v1/keygen', UniqueIdentifierResource())

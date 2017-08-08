@@ -80,9 +80,14 @@ def parse(mail):
     return json.dumps(response.json(), indent = 2)
 
 def serve(subject):
+    timeout = time.time() + 30
     mail = fetch(subject)
-    if mail:
-        return parse(mail)
+
+    while True:
+        if mail or time.time() > timeout:
+            return parse(mail)
+        else:
+            mail = fetch(subject)
 
 def generate_key():
-    return json.dumps({ 'id': str(uuid4().hex[7:]).upper() }, indent = 2)
+    return json.dumps({ 'id': str(uuid4().hex[12:]).upper() }, indent = 2)
