@@ -80,7 +80,7 @@ def parse(mail):
     return json.dumps(response.json(), indent = 2)
 
 def serve(subject):
-    timeout = time.time() + 30
+    timeout = time.time() + 15
     mail = fetch(subject)
 
     while True:
