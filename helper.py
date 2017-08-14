@@ -7,8 +7,6 @@ import hashlib
 import hmac
 import time
 import requests
-import random
-import string
 
 
 def fetch(subject):
@@ -22,7 +20,7 @@ def fetch(subject):
     }
 
     email_id = 'skyborne.reservations@gmail.com'
-    access_token = requests.post(url, data = post_args).json()['access_token']
+    access_token = requests.post(url, data=post_args).json()['access_token']
     auth_string = 'user=%s\1auth=Bearer %s\1\1' % (email_id, access_token)
 
     mail = imaplib.IMAP4_SSL('imap.gmail.com')
@@ -52,6 +50,7 @@ def fetch(subject):
 
     return ticket
 
+
 def parse(mail):
     url = "https://api.edison.tech/v1/discovery"
 
@@ -75,9 +74,10 @@ def parse(mail):
         hashlib.sha1
     ).hexdigest()
 
-    response = requests.post(url, data = data)
+    response = requests.post(url, data=data)
 
-    return json.dumps(response.json(), indent = 2)
+    return json.dumps(response.json(), indent=2)
+
 
 def serve(subject):
     timeout = time.time() + 15
@@ -89,5 +89,6 @@ def serve(subject):
         else:
             mail = fetch(subject)
 
+
 def generate_key():
-    return json.dumps({ 'id': str(uuid4().hex[12:]).upper() }, indent = 2)
+    return json.dumps({'id': str(uuid4().hex[12:]).upper()}, indent=2)
