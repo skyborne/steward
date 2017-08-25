@@ -1,6 +1,6 @@
 FROM nginx:latest
 
-MAINTAINER Skyborne
+MAINTAINER Skyborne Co. <info@skyborne.co>
 
 COPY src/* /srv/steward
 RUN cd /srv/steward
