@@ -1,5 +1,7 @@
 from uuid import uuid4
 
+from config import keys
+
 import imaplib
 import email
 import json
@@ -14,9 +16,9 @@ def fetch(subject):
 
     post_args = {
         'grant_type': 'refresh_token',
-        'client_id': open('.keys/GMAIL_CLIENT_ID', 'r').readline().rstrip(),
-        'client_secret': open('.keys/GMAIL_CLIENT_SECRET', 'r').readline().rstrip(),
-        'refresh_token': open('.keys/GMAIL_REFRESH_TOKEN', 'r').readline().rstrip()
+        'client_id': keys.GMAIL_CLIENT_ID,
+        'client_secret': keys.GMAIL_CLIENT_SECRET,
+        'refresh_token': keys.GMAIL_REFRESH_TOKEN
     }
 
     email_id = 'skyborne.reservations@gmail.com'
@@ -54,8 +56,8 @@ def fetch(subject):
 def parse(mail):
     url = "https://api.edison.tech/v1/discovery"
 
-    api_key = open('.keys/EDISON_API', 'r').readline().rstrip()
-    api_secret = open('.keys/EDISON_SECRET', 'r').readline().rstrip()
+    api_key = keys.EDISON_API
+    api_secret = keys.EDISON_SECRET
 
     data = {
         'email': mail,
