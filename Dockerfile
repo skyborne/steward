@@ -17,4 +17,4 @@ RUN source .venv/bin/activate
 RUN pip install -r config/requirements.txt
 RUN pip install -v --no-binary :all: falcon
 
-CMD ["gunicorn --workers=2 steward:api"]
+CMD ["gunicorn --workers=2 --reload steward:api"]
