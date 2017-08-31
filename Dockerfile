@@ -1,7 +1,8 @@
 FROM nginx:latest
 
-MAINTAINER Skyborne Co. <info@skyborne.co>
+MAINTAINER Skyborne <info@skyborne.co>
 
+RUN mkdir /srv/steward
 COPY src/* /srv/steward
 RUN cd /srv/steward
 
@@ -17,4 +18,4 @@ RUN source .venv/bin/activate
 RUN pip install -r config/requirements.txt
 RUN pip install -v --no-binary :all: falcon
 
-CMD ["gunicorn --workers=2 --reload steward:api"]
+CMD ["gunicorn --workers=2 steward:api"]
